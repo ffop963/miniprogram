@@ -1,0 +1,61 @@
+  //下载展现图片
+  showpic(){
+    var that=this;
+    var floder = that.data.currentactinfo.show_pic_tag;
+    var filepath = `${wx.env.USER_DATA_PATH}/` + floder;
+    fs.access({
+      path: filepath,
+      success(res) {
+        console.log("文件检测");
+        if (res.errMsg == "access:ok") {
+          fs.readdir({
+            dirPath: filepath,
+            success(res) {
+              that.setData({
+                ar_model:res.files,
+              });
+              var a = setInterval(function () {
+                res.files.forEach(function(value,index,self){
+                  that.setData({
+                    armodel: filepath+'/'+value,
+                  });
+                });
+              
+              }, 1000)
+            }
+          })
+        }
+      },
+      fail(res) {
+        that.downzip();
+      }
+    })
+  },
+//下载zip文件解压文件
+  downzip() {
+    console.log("开始download");
+    var that = this;
+    console.log(that.data.currentactinfo.url + that.data.currentactinfo.show_image);
+    wx.downloadFile({
+      url: that.data.currentactinfo.url+that.data.currentactinfo.show_image,
+      success(res) {
+        if (res.statusCode == 200) {
+          console.log("下载成功");
+          fs.unzip({
+            zipFilePath: res.tempFilePath,
+            targetPath: `${wx.env.USER_DATA_PATH}`,
+            success(res) {
+              console.log("解压成功");
+            },
+            fail(res) {
+              console.log(res);
+            }
+          })
+        }
+      }
+    })
+  },
+  
+  https://we7oss.vrcn.club/videos/2/2019/05/TFG0o7f7MIRB0I50Z1rt150Y3y5bMI.mp4
+  https://we7oss.vrcn.club/videos/2/2019/05/TFG0o7f7MIRB0I50Z1rt150Y3y5bMI.mp4
+  
